@@ -1,8 +1,9 @@
 import React from 'react'
 
 function Card({ card, handleClick, userId }) {
-  const isLiked = card.likes.some((like) => like._id === userId)
-  const itsMyCard = card.owner._id === userId
+  const {name, link, owner, likes} = card
+  const isLiked = likes.some((like) => like._id === userId)
+  const itsMyCard = owner._id === userId
   return (
     <li className="element">
       {itsMyCard && (
@@ -14,21 +15,19 @@ function Card({ card, handleClick, userId }) {
       )}
       <img
         className="element__image"
-        src={card.link}
-        alt={card.name}
+        src={link}
+        alt={name}
         onClick={handleClick}
       />
       <div className="element__description">
-        <h2 className="element__title">{card.name}</h2>
+        <h2 className="element__title">{name}</h2>
         <div className="element__like_container">
           <button
-            className={`element__heart ${
-              isLiked ? 'element__heart-active' : ''
-            }`}
+            className={`element__heart ${isLiked && 'element__heart-active'}`}
             type="button"
             aria-label="нравится"
           />
-          <div className="element__heart-count">{card.likes.length}</div>
+          <div className="element__heart-count">{likes.length}</div>
         </div>
       </div>
     </li>

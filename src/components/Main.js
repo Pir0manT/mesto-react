@@ -19,7 +19,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
         setUserName(name)
         setUserDescription(about)
         setUserId(_id)
-        setCards(cards.reverse())
+        setCards(cards)
       })
       .catch((err) => console.log(err))
   }, [])
