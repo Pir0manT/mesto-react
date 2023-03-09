@@ -4,6 +4,7 @@ import Footer from './Footer'
 import Main from './Main'
 import ImagePopup from './ImagePopup'
 import PopupWithForm from './PopupWithForm'
+
 function App() {
   const [isEditProfilePopupOpen, setOpenEditProfile] = React.useState(false)
   const [isEditAvatarPopupOpen, setOpenEditAvatar] = React.useState(false)
