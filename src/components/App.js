@@ -7,6 +7,7 @@ import PopupWithForm from './PopupWithForm'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { api } from '../utils/Api'
 import spinner from '../images/Spinner.svg'
+import EditProfilePopup from './EditProfilePopup'
 
 function App() {
   const [isEditProfilePopupOpen, setOpenEditProfile] = useState(false)
@@ -55,6 +56,12 @@ function App() {
       .catch((error) => console.log(error))
   }
 
+  const handleUpdateUser = (newUser) => {
+    api
+      .setProfile(newUser)
+      .then((user) => setCurrentUser(user))
+      .catch((error) => console.log(error))
+  }
   const handleAddPlaceClick = () => {
     setOpenAddPlace(true)
   }
@@ -88,6 +95,12 @@ function App() {
         />
         <Footer />
 
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+
         <PopupWithForm
           name="add-element"
           isOpen={isAddPlacePopupOpen}
@@ -115,37 +128,6 @@ function App() {
             name="link"
           />
           <span className="popup__error element-link-error"></span>
-        </PopupWithForm>
-
-        <PopupWithForm
-          name="edit-profile"
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          title="Редактировать профиль"
-          btnTitle="Сохранить"
-        >
-          <input
-            required
-            className="popup__input"
-            type="text"
-            placeholder="Ваше имя"
-            id="name-input"
-            minLength="2"
-            maxLength="40"
-            name="name"
-          />
-          <span className="popup__error name-input-error"></span>
-          <input
-            required
-            className="popup__input"
-            type="text"
-            placeholder="Немного о себе"
-            id="description-input"
-            minLength="2"
-            maxLength="200"
-            name="about"
-          />
-          <span className="popup__error description-input-error"></span>
         </PopupWithForm>
 
         <PopupWithForm
