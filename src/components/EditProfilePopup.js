@@ -16,7 +16,7 @@ const EditProfilePopup = ({
   useEffect(() => {
     setName(currentUser.name)
     setDescription(currentUser.about)
-  }, [currentUser])
+  }, [currentUser, isOpen])
 
   const handleSubmit = (e) => {
     e.preventDefault()

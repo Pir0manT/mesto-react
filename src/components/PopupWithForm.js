@@ -10,6 +10,7 @@ function PopupWithForm({
   children,
   onClose,
   onSubmit,
+  isConfirmPopup,
 }) {
   const submitBtnRef = useRef()
 
@@ -19,7 +20,11 @@ function PopupWithForm({
 
   return (
     <div className={`popup popup_type_${name} ${isOpen && 'popup_opened'}`}>
-      <div className="popup__container">
+      <div
+        className={`popup__${
+          !isConfirmPopup ? 'container' : 'container-delete'
+        }`}
+      >
         <h2 className="popup__title">{title}</h2>
         <form name={name} onSubmit={onSubmit} className="popup__form">
           {children}

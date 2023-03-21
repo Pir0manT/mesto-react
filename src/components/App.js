@@ -9,11 +9,13 @@ import { api } from '../utils/Api'
 import spinner from '../images/Spinner.svg'
 import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
+import ConfirmDeletePopup from './ConfirmDeletePopup'
 
 function App() {
   const [isEditProfilePopupOpen, setOpenEditProfile] = useState(false)
   const [isEditAvatarPopupOpen, setOpenEditAvatar] = useState(false)
   const [isAddPlacePopupOpen, setOpenAddPlace] = useState(false)
+  const [isConfirmDeletePopupOpen, setOpenConfirmDelete] = useState(false)
   const [selectedCard, setSelectedCard] = useState({})
   const [isImageOpen, setImageOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState({
@@ -52,11 +54,24 @@ function App() {
       .catch((error) => console.log(error))
   }
 
-  const handleCardDelete = (id) => {
+  const handleDeleteClick = (card) => {
+    setSelectedCard(card)
+    setOpenConfirmDelete(true)
+  }
+  const handleCardDelete = () => {
+    setLoadingText('Удаление...')
+    setIsSaving(true)
     api
-      .delCard(id)
-      .then(() => setCards((state) => state.filter((card) => card._id !== id)))
+      .delCard(selectedCard._id)
+      .then(() => {
+        setCards((state) =>
+          state.filter((card) => card._id !== selectedCard._id)
+        )
+        setSelectedCard({})
+        closeAllPopups()
+      })
       .catch((error) => console.log(error))
+      .finally(() => setIsSaving(false))
   }
 
   const handleUpdateUser = (newUser) => {
@@ -102,6 +117,7 @@ function App() {
     isAddPlacePopupOpen && setOpenAddPlace(false)
     isEditAvatarPopupOpen && setOpenEditAvatar(false)
     isEditProfilePopupOpen && setOpenEditProfile(false)
+    isConfirmDeletePopupOpen && setOpenConfirmDelete(false)
   }
 
   return (
@@ -115,9 +131,17 @@ function App() {
           onCardClick={handleCardClick}
           cards={cards}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+          onCardDelete={handleDeleteClick}
         />
         <Footer />
+
+        <ConfirmDeletePopup
+          isOpen={isConfirmDeletePopupOpen}
+          isSaving={isSaving}
+          loadingText={loadingText}
+          onClose={closeAllPopups}
+          onDeleteCard={handleCardDelete}
+        />
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

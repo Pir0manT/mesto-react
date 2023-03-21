@@ -53,7 +53,7 @@ function Main({
               card={card}
               handleClick={() => onCardClick(card)}
               handleLikeClick={() => onCardLike(card)}
-              handleDeleteClick={() => onCardDelete(card._id)}
+              handleDeleteClick={() => onCardDelete(card)}
             />
           ))}
         </ul>
