@@ -3,13 +3,13 @@ import Header from './Header'
 import Footer from './Footer'
 import Main from './Main'
 import ImagePopup from './ImagePopup'
-import PopupWithForm from './PopupWithForm'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { api } from '../utils/Api'
 import spinner from '../images/Spinner.svg'
 import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
 import ConfirmDeletePopup from './ConfirmDeletePopup'
+import AddPlacePopup from './AddPlacePopup'
 
 function App() {
   const [isEditProfilePopupOpen, setOpenEditProfile] = useState(false)
@@ -54,10 +54,6 @@ function App() {
       .catch((error) => console.log(error))
   }
 
-  const handleDeleteClick = (card) => {
-    setSelectedCard(card)
-    setOpenConfirmDelete(true)
-  }
   const handleCardDelete = () => {
     setLoadingText('Удаление...')
     setIsSaving(true)
@@ -100,6 +96,19 @@ function App() {
       .finally(() => setIsSaving(false))
   }
 
+  const handleAddPlace = (card) => {
+    setLoadingText('Добавление места...')
+    setIsSaving(true)
+    api
+      .addCard(card)
+      .then((newCard) => {
+        setCards((state) => [newCard, ...state])
+        closeAllPopups()
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setIsSaving(false))
+  }
+
   const handleAddPlaceClick = () => {
     setOpenAddPlace(true)
   }
@@ -110,6 +119,11 @@ function App() {
 
   const handleEditProfileClick = () => {
     setOpenEditProfile(true)
+  }
+
+  const handleDeleteClick = (card) => {
+    setSelectedCard(card)
+    setOpenConfirmDelete(true)
   }
 
   const closeAllPopups = () => {
@@ -159,34 +173,13 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
 
-        <PopupWithForm
-          name="add-element"
+        <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
+          isSaving={isSaving}
+          loadingText={loadingText}
           onClose={closeAllPopups}
-          title="Новое место"
-          btnTitle="Создать"
-        >
-          <input
-            required
-            className="popup__input"
-            type="text"
-            placeholder="Название"
-            id="element-name"
-            minLength="2"
-            maxLength="30"
-            name="name"
-          />
-          <span className="popup__error element-name-error"></span>
-          <input
-            required
-            className="popup__input"
-            type="url"
-            placeholder="Ссылка на картинку"
-            id="element-link"
-            name="link"
-          />
-          <span className="popup__error element-link-error"></span>
-        </PopupWithForm>
+          onAddPlace={handleAddPlace}
+        />
 
         <ImagePopup
           name="open-image"
