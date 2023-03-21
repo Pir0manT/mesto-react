@@ -8,6 +8,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { api } from '../utils/Api'
 import spinner from '../images/Spinner.svg'
 import EditProfilePopup from './EditProfilePopup'
+import EditAvatarPopup from './EditAvatarPopup'
 
 function App() {
   const [isEditProfilePopupOpen, setOpenEditProfile] = useState(false)
@@ -61,7 +62,17 @@ function App() {
       .setProfile(newUser)
       .then((user) => setCurrentUser(user))
       .catch((error) => console.log(error))
+    closeAllPopups()
   }
+
+  const handleUpdateAvatar = (avatar) => {
+    api
+      .setAvatar(avatar)
+      .then((userInfo) => setCurrentUser(userInfo))
+      .catch((error) => console.log(error))
+    closeAllPopups()
+  }
+
   const handleAddPlaceClick = () => {
     setOpenAddPlace(true)
   }
@@ -80,6 +91,7 @@ function App() {
     isEditAvatarPopupOpen && setOpenEditAvatar(false)
     isEditProfilePopupOpen && setOpenEditProfile(false)
   }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -99,6 +111,12 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
+        />
+
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
         />
 
         <PopupWithForm
@@ -128,24 +146,6 @@ function App() {
             name="link"
           />
           <span className="popup__error element-link-error"></span>
-        </PopupWithForm>
-
-        <PopupWithForm
-          name="avatar"
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          title="Обновить аватар"
-          btnTitle="Сохранить"
-        >
-          <input
-            required
-            className="popup__input"
-            type="url"
-            placeholder="Ссылка на аватар"
-            id="avatar-link"
-            name="avatar"
-          />
-          <span className="popup__error avatar-link-error"></span>
         </PopupWithForm>
 
         <ImagePopup
