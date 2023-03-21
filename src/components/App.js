@@ -23,6 +23,8 @@ function App() {
     id: '',
   })
   const [cards, setCards] = useState([])
+  const [isSaving, setIsSaving] = useState(false)
+  const [loadingText, setLoadingText] = useState('Сохранение...')
 
   useEffect(() => {
     Promise.all([api.getProfile(), api.getInitialCards()])
@@ -58,19 +60,29 @@ function App() {
   }
 
   const handleUpdateUser = (newUser) => {
+    setLoadingText('Сохранение профиля...')
+    setIsSaving(true)
     api
       .setProfile(newUser)
-      .then((user) => setCurrentUser(user))
+      .then((user) => {
+        setCurrentUser(user)
+        closeAllPopups()
+      })
       .catch((error) => console.log(error))
-    closeAllPopups()
+      .finally(() => setIsSaving(false))
   }
 
   const handleUpdateAvatar = (avatar) => {
+    setLoadingText('Сохранение аватара...')
+    setIsSaving(true)
     api
       .setAvatar(avatar)
-      .then((userInfo) => setCurrentUser(userInfo))
+      .then((userInfo) => {
+        setCurrentUser(userInfo)
+        closeAllPopups()
+      })
       .catch((error) => console.log(error))
-    closeAllPopups()
+      .finally(() => setIsSaving(false))
   }
 
   const handleAddPlaceClick = () => {
@@ -109,12 +121,16 @@ function App() {
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
+          isSaving={isSaving}
+          loadingText={loadingText}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
         />
 
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
+          isSaving={isSaving}
+          loadingText={loadingText}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
         />
