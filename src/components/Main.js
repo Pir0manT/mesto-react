@@ -1,35 +1,24 @@
-import React from 'react'
-import defaultAvatar from '../images/avatar.jpg'
-import { api } from '../utils/Api'
+import { useContext } from 'react'
 import Card from './Card'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [userName, setUserName] = React.useState('Жак-Ив Кусто')
-  const [userDescription, setUserDescription] = React.useState(
-    'Исследователь океана'
-  )
-  const [userAvatar, setUserAvatar] = React.useState(defaultAvatar)
-  const [cards, setCards] = React.useState([])
-  const [userId, setUserId] = React.useState('')
-
-  React.useEffect(() => {
-    Promise.all([api.getProfile(), api.getInitialCards()])
-      .then(([{ name, about, avatar, _id }, cards]) => {
-        setUserAvatar(avatar)
-        setUserName(name)
-        setUserDescription(about)
-        setUserId(_id)
-        setCards(cards)
-      })
-      .catch((err) => console.log(err))
-  }, [])
+function Main({
+  onEditAvatar,
+  onEditProfile,
+  onAddPlace,
+  onCardClick,
+  cards,
+  onCardLike,
+  onCardDelete,
+}) {
+  const currentUser = useContext(CurrentUserContext)
 
   return (
     <main>
       <section className="profile" aria-label="Профиль пользователя">
         <img
           className="profile__avatar"
-          src={userAvatar}
+          src={currentUser.avatar}
           alt="Фотография пользователя"
         />
         <button
@@ -39,7 +28,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
         />
         <div className="profile__info">
           <div className="profile__container">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{currentUser.name}</h1>
             <button
               className="profile__edit-button link-opacity"
               type="button"
@@ -47,7 +36,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
               onClick={onEditProfile}
             />
           </div>
-          <p className="profile__subtitle">{userDescription}</p>
+          <p className="profile__subtitle">{currentUser.about}</p>
         </div>
         <button
           className="profile__add-button link-opacity"
@@ -63,7 +52,8 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
               key={card._id}
               card={card}
               handleClick={() => onCardClick(card)}
-              userId={userId}
+              handleLikeClick={() => onCardLike(card)}
+              handleDeleteClick={() => onCardDelete(card._id)}
             />
           ))}
         </ul>

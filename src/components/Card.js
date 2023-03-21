@@ -1,9 +1,12 @@
-import React from 'react'
+import { useContext } from 'react'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
-function Card({ card, handleClick, userId }) {
-  const {name, link, owner, likes} = card
-  const isLiked = likes.some((like) => like._id === userId)
-  const itsMyCard = owner._id === userId
+function Card({ card, handleClick, handleLikeClick, handleDeleteClick }) {
+  const { name, link, owner, likes } = card
+  const currentUser = useContext(CurrentUserContext)
+  const itsMyCard = owner._id === currentUser._id
+  const isLiked = likes.some((like) => like._id === currentUser._id)
+
   return (
     <li className="element">
       {itsMyCard && (
@@ -11,6 +14,7 @@ function Card({ card, handleClick, userId }) {
           className="element__delete link-opacity"
           type="button"
           aria-label="удалить"
+          onClick={handleDeleteClick}
         />
       )}
       <img
@@ -26,6 +30,7 @@ function Card({ card, handleClick, userId }) {
             className={`element__heart ${isLiked && 'element__heart-active'}`}
             type="button"
             aria-label="нравится"
+            onClick={handleLikeClick}
           />
           <div className="element__heart-count">{likes.length}</div>
         </div>
