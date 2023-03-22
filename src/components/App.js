@@ -4,7 +4,7 @@ import Footer from './Footer'
 import Main from './Main'
 import ImagePopup from './ImagePopup'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
-import { api } from '../utils/Api'
+import { Api } from '../utils/Api'
 import spinner from '../images/Spinner.svg'
 import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
@@ -29,7 +29,7 @@ function App() {
   const [loadingText, setLoadingText] = useState('Сохранение...')
 
   useEffect(() => {
-    Promise.all([api.getProfile(), api.getInitialCards()])
+    Promise.all([Api.getProfile(), api.getInitialCards()])
       .then(([userProfile, cards]) => {
         setCurrentUser(userProfile)
         setCards(cards)
@@ -44,7 +44,7 @@ function App() {
 
   const handleCardLike = (card) => {
     const cardIsLiked = card.likes.some((like) => like._id === currentUser._id)
-    api
+    Api
       .changeLike(card._id, cardIsLiked)
       .then((newCard) =>
         setCards((state) =>
@@ -57,7 +57,7 @@ function App() {
   const handleCardDelete = () => {
     setLoadingText('Удаление...')
     setIsSaving(true)
-    api
+    Api
       .delCard(selectedCard._id)
       .then(() => {
         setCards((state) =>
@@ -73,7 +73,7 @@ function App() {
   const handleUpdateUser = (newUser) => {
     setLoadingText('Сохранение профиля...')
     setIsSaving(true)
-    api
+    Api
       .setProfile(newUser)
       .then((user) => {
         setCurrentUser(user)
@@ -86,8 +86,8 @@ function App() {
   const handleUpdateAvatar = (avatar) => {
     setLoadingText('Сохранение аватара...')
     setIsSaving(true)
-    api
-      .setAvatar(avatar)
+    Api
+     .setAvatar(avatar)
       .then((userInfo) => {
         setCurrentUser(userInfo)
         closeAllPopups()
@@ -99,7 +99,7 @@ function App() {
   const handleAddPlace = (card) => {
     setLoadingText('Добавление места...')
     setIsSaving(true)
-    api
+    Api
       .addCard(card)
       .then((newCard) => {
         setCards((state) => [newCard, ...state])
