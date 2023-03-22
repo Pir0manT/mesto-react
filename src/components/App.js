@@ -29,7 +29,7 @@ function App() {
   const [loadingText, setLoadingText] = useState('Сохранение...')
 
   useEffect(() => {
-    Promise.all([Api.getProfile(), api.getInitialCards()])
+    Promise.all([Api.getProfile(), Api.getInitialCards()])
       .then(([userProfile, cards]) => {
         setCurrentUser(userProfile)
         setCards(cards)
