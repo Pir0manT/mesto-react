@@ -4,7 +4,7 @@ import Footer from './Footer'
 import Main from './Main'
 import ImagePopup from './ImagePopup'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
-import Api from '../utils/api'
+import api from '../utils/api'
 import spinner from '../images/Spinner.svg'
 import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
@@ -29,7 +29,7 @@ function App() {
   const [loadingText, setLoadingText] = useState('Сохранение...')
 
   useEffect(() => {
-    Promise.all([Api.getProfile(), Api.getInitialCards()])
+    Promise.all([api.getProfile(), api.getInitialCards()])
       .then(([userProfile, cards]) => {
         setCurrentUser(userProfile)
         setCards(cards)
@@ -44,7 +44,7 @@ function App() {
 
   const handleCardLike = (card) => {
     const cardIsLiked = card.likes.some((like) => like._id === currentUser._id)
-    Api
+    api
       .changeLike(card._id, cardIsLiked)
       .then((newCard) =>
         setCards((state) =>
@@ -57,7 +57,7 @@ function App() {
   const handleCardDelete = () => {
     setLoadingText('Удаление...')
     setIsSaving(true)
-    Api
+    api
       .delCard(selectedCard._id)
       .then(() => {
         setCards((state) =>
@@ -73,7 +73,7 @@ function App() {
   const handleUpdateUser = (newUser) => {
     setLoadingText('Сохранение профиля...')
     setIsSaving(true)
-    Api
+    api
       .setProfile(newUser)
       .then((user) => {
         setCurrentUser(user)
@@ -86,8 +86,8 @@ function App() {
   const handleUpdateAvatar = (avatar) => {
     setLoadingText('Сохранение аватара...')
     setIsSaving(true)
-    Api
-     .setAvatar(avatar)
+    api
+      .setAvatar(avatar)
       .then((userInfo) => {
         setCurrentUser(userInfo)
         closeAllPopups()
@@ -99,7 +99,7 @@ function App() {
   const handleAddPlace = (card) => {
     setLoadingText('Добавление места...')
     setIsSaving(true)
-    Api
+    api
       .addCard(card)
       .then((newCard) => {
         setCards((state) => [newCard, ...state])
