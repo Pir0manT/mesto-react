@@ -13,8 +13,8 @@ const EditAvatarPopup = ({
   const avatarRef = useRef()
 
   useEffect(() => {
-    // avatarRef.current.value = currentUser.avatar
-    avatarRef.current.value = ''
+    avatarRef.current.value = currentUser.avatar
+    // avatarRef.current.value = ''
   }, [currentUser, isOpen])
 
   const handleSubmit = (e) => {
